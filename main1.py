@@ -1,3 +1,4 @@
+from typing import List
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -57,23 +58,43 @@ def search_animals(db):
     print()
 
     # Build and execute the query based on the request made
-    if choice == "1":
+    if choice == "1": # Show all Animals
         results = db.collection("animal_facts").get()
-    elif choice == "2":
+        print("")
+        print("Search Results")
+        print(f"{'Name':^20}")
+        for result in results:
+            # data = result.to_dict()
+            print(f"{result.id:^20}")
+    elif choice == "2": # Show animals by first letter
+        print("Type starting letter of animal you would like to search for: ")
+        letter = input("> ").upper()
         results = db.collection("animal_facts").get()
-    elif choice == "3":
-        results = db.collection("animal_facts").get()
+        for result in results:
+            first_char = result.id[0:1]
+            if f"{letter}" in first_char:
+                print(result.id)
+            # result = result.id
+            # list = []
+            # list.append(result)
+            # # print(list)
+            # if f"{letter}" in list:
+            #     print(list)
+        # # results = results.where("name","==",f"{letter}")
+        # results = results
+
     else:
         print("Invalid Selection")
         return
     
     # Display all the results from any of the queries
-    print("")
-    print("Search Results")
-    print(f"{'Name':^30}")
-    for result in results:
-        data = result.to_dict()
-        print(f"{result.id:^30}")
+    # print("")
+    # print("Search Results")
+    # print(f"{'Name':^20}")
+    # print(results)
+    # for result in results:
+    #     # data = result.to_dict()
+    #     print(f"{result.id:^20}")
        
 
 def add_new_animal(db):
@@ -82,7 +103,7 @@ def add_new_animal(db):
     item name must be unique (firestore document id).  
     '''
 
-    name = input("Animal Name: ")
+    name = input("Animal Name: ").upper()
     fact = input("Intresting Fact: ")
     
     
@@ -100,7 +121,13 @@ def add_new_animal(db):
     # # Save this in the log collection in Firestore       
     log_transaction(db, f"Added {name} with intresting fact {fact}")
 
-
+def delete_animal(db):
+    '''
+    This deletes an animal of the users choice
+    '''
+    print("What animal would you like to delete?")
+    delete = input("> ").upper()
+    db.collection("animal_facts").document(delete).delete()
 
 def log_transaction(db, message):
     '''
@@ -119,6 +146,8 @@ def main():
         print("0) Exit")
         print("1) See a random Animal!")
         print("2) Search all Animals")
+        print("3) Add new Animal")
+        print("4) Delete Animal")
         choice = input(f"> ")
         print()
         if choice == "1":
@@ -126,7 +155,9 @@ def main():
         elif choice == "2":
             search_animals(db)
         elif choice == "3":
-            add_new_animal(db)                    
+            add_new_animal(db)
+        elif choice == "4":
+            delete_animal(db)
 
 if __name__ == "__main__":
     main()
