@@ -40,7 +40,7 @@ def get_rand_animal(db):
     print(f"Here is a cool fact about the {animal_day.capitalize()}")
     print("")
 
-    fact_list = db.collection(u"animal_facts").document(animal_day) # get random fact list attached to animal name we pulled from above.
+    fact_list = db.collection("animal_facts").document(animal_day) # get random fact list attached to animal name we pulled from above.
     get_list = fact_list.get().to_dict() # take that list into a dict
     random_fact = random.choice(list(get_list.values())) # pick a random fact ffrom dict
     print(random_fact) # print random fact
@@ -74,6 +74,14 @@ def search_animals(db):
             first_char = result.id[0:1]
             if f"{letter}" in first_char:
                 print(result.id)
+        print("Which animal would you like to learn more about?")
+        animal = input("> ").upper()
+        fact_list = db.collection("animal_facts").document(animal) # get random fact list attached to animal name we pulled from above.
+        get_list = fact_list.get().to_dict() # take that list into a dict
+        random_fact = random.choice(list(get_list.values())) # pick a random fact ffrom dict
+        print("")
+        print(f"Here is a cool fact about the {animal}")
+        print(f">> {random_fact}") # print random fact
             # result = result.id
             # list = []
             # list.append(result)
