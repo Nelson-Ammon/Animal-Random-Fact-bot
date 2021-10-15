@@ -68,42 +68,26 @@ def search_animals(db):
             print(f"{result.id:^20}")
     elif choice == "2": # Show animals by first letter
         print("Type starting letter of animal you would like to search for: ")
-        letter = input("> ").upper()
-        results = db.collection("animal_facts").get()
-        for result in results:
-            first_char = result.id[0:1]
-            if f"{letter}" in first_char:
-                print(result.id)
+        letter = input("> ").upper() # get letter from the user
+        results = db.collection("animal_facts").get() # get the list of names
+        for result in results: # parse through each name
+            first_char = result.id[0:1] # check the first letter of each name with the user letter
+            if f"{letter}" in first_char: # if that letter matches in the name print it 
+                print(result.id)# print the letter 
+
         print("Which animal would you like to learn more about?")
-        animal = input("> ").upper()
+        animal = input("> ").upper() # get user input 
         fact_list = db.collection("animal_facts").document(animal) # get random fact list attached to animal name we pulled from above.
         get_list = fact_list.get().to_dict() # take that list into a dict
         random_fact = random.choice(list(get_list.values())) # pick a random fact ffrom dict
         print("")
         print(f"Here is a cool fact about the {animal}")
         print(f">> {random_fact}") # print random fact
-            # result = result.id
-            # list = []
-            # list.append(result)
-            # # print(list)
-            # if f"{letter}" in list:
-            #     print(list)
-        # # results = results.where("name","==",f"{letter}")
-        # results = results
 
     else:
         print("Invalid Selection")
         return
     
-    # Display all the results from any of the queries
-    # print("")
-    # print("Search Results")
-    # print(f"{'Name':^20}")
-    # print(results)
-    # for result in results:
-    #     # data = result.to_dict()
-    #     print(f"{result.id:^20}")
-       
 
 def add_new_animal(db):
     '''
